@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usersdb-depl
+spec:
+  selector:
+    matchLabels:
+      app: usersdb
+  template:
+    metadata:
+      labels:
+        app: usersdb
+    spec:
+      volumes:
+        - name: userdb-storage
+          persistentVolumeClaim:
+            claimName: userdb-pvc
+      containers:
+        - name: usersdb
+          image: postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+          volumeMounts:
+            - name: userdb-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userdb-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: usersdb
+  ports:
+    - port: 5432
+      targetPort: 5432

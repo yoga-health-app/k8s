@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-depl
+spec:
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: slokesh/yoga-users:latest
+          ports:
+            - containerPort: 4000
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: users
+  ports:
+    - port: 4000
+      targetPort: 4000
