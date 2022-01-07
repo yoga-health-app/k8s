@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: client-cm
+data:
+  config.json: |
+    {
+      "environment": {
+        "serverUrl": "/api/users",
+        "graphQLUrl": "/api/users"
+      }
+    }

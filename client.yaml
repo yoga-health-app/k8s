@@ -12,12 +12,24 @@ spec:
       labels:
         app: client
     spec:
+      volumes:
+        - name: config
+          configMap:
+            name: client-cm
+            items:
+              - key: "config.json"
+                path: "config.json"
       containers:
         - name: client
           image: slokesh/yoga-client:latest
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: "/config.json"
+              readOnly: true
+
 ---
 apiVersion: v1
 kind: Service
